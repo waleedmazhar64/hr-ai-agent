@@ -1,0 +1,9 @@
+flask
+docx2txt
+PyMuPDF
+scikit-learn
+textblob
+opencv-python
+mediapipe
+speechrecognition
+moviepy
