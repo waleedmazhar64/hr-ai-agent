@@ -1,72 +1,60 @@
-# 🤖 AI HR Agent – Automating HR Workflows
+# HR AI Agent — End-to-End HR Workflow Automation
 
-AI HR Agent is a **full-stack, AI-powered Human Resources automation system** that streamlines **job posting, resume screening, interview analysis, onboarding task generation, and leave approval prediction** into a single, unified workflow.  
-This project was developed as part of an MSc dissertation to explore **how effectively AI can automate end-to-end HR processes** while improving efficiency and decision-making.
+An MSc AI engineering project exploring automation across candidate screening, interviews, hiring decisions, onboarding, and leave management.
 
-## 🚀 Features
+## Engineering scope
 
-- ✅ **Job Posting & Management** – Admin can create, edit, and delete job openings.
-- ✅ **Candidate Portal** – Candidates can submit resumes, receive interview invites, and record video interviews via webcam.
-- ✅ **Resume Parsing & Scoring** – Python microservice uses NLP (TF-IDF + cosine similarity) to match resumes with job descriptions.
-- ✅ **AI-Powered Interview Analysis** – Processes recorded video, analyzes voice tone, keywords, and gestures to generate an interview score.
-- ✅ **Automated Hiring Decisions** – Weighted decision model automatically classifies candidates as “Hire” or “Reject.”
-- ✅ **Dynamic Onboarding Task Generation** – Generates job-specific onboarding tasks for hired candidates.
-- ✅ **Leave Approval Prediction** – Sentiment & keyword-based AI decision-making for employee leave requests.
-- ✅ **Analytics Dashboard** – Admin view with charts visualizing hiring efficiency, time-to-hire, and decision audit logs.
-- ✅ **Audit Logging** – All AI decisions are logged for research and transparency.
-- ✅ **Universal Design** – Can be adapted to different industries (IT, healthcare, education, etc.).
+- **Frontend:** Angular
+- **Backend:** Laravel
+- **AI service:** Python
+- **Database:** MySQL
+- **Integration:** Laravel APIs connect workflow operations with a separate Python analysis service.
 
----
+## Workflow
 
-## 🏗️ Architecture
+1. An administrator creates a job opening.
+2. A candidate submits a resume.
+3. The system scores resume/job-description similarity.
+4. The candidate receives an interview invitation and records a video.
+5. The interview is submitted for analysis.
+6. The system combines assessment signals for a hiring recommendation.
+7. Onboarding tasks and leave-related workflows follow.
 
-The project follows a **three-tier architecture**:
+## AI approach and limitations
 
-- **Frontend:** Angular 17  
-- **Backend:** Laravel 11 (API Gateway + Database + Workflow Logic)  
-- **AI Microservices:** Python 3.10 (Flask, scikit-learn, Mediapipe, OpenCV, TextBlob)  
-- **Database:** MySQL  
-- **Video Processing:** MediaRecorder API (Frontend) + MoviePy (Python)
+Resume matching uses TF-IDF and cosine similarity. Some interview-analysis and speech-processing functionality was implemented as placeholders during the academic project; the repository should **not** be represented as a validated, fully automated hiring decision system. Any real deployment would require robust model evaluation, fairness testing, human review, privacy controls, and explicit consent for processing candidate recordings.
 
-  ```mermaid
-graph TD
-A[Admin Creates Job] --> B[Candidate Submits Resume]
-B --> C[Resume Sent to Python API]
-C --> D[Resume Scored & Stored in DB]
-D --> E[Interview Invitation Generated]
-E --> F[Candidate Records & Uploads Video]
-F --> G[Python Analyzes Video & Returns Score]
-G --> H[Laravel Makes Final Hiring Decision]
-H --> I[Onboarding Tasks Generated]
-I --> J[Employee Dashboard Displays Tasks]
-J --> K[Leave Requests Evaluated by AI]
+## Architecture
 
-## ⚙️ Installation
+```mermaid
+flowchart LR
+  A[Angular candidate/admin UI] --> B[Laravel API and workflow]
+  B --> C[(MySQL)]
+  B --> D[Python analysis service]
+  D --> B
+```
 
-### 1️⃣ Clone Repository
-      git clone https://github.com/waleedmazhar64/ai-hr-agent.git
-      cd ai-hr-agent
+## Local development
 
+The repository contains a `backend` directory and a `frontend` entry. Verify the frontend checkout and its own instructions before attempting a full-stack run.
 
-### 2️⃣ Backend (Laravel)
-      cd backend
-      composer install
-      cp .env.example .env
-      php artisan key:generate
-      php artisan migrate --seed
-      php artisan serve
+For a conventional Laravel backend setup:
 
-Backend will run at: http://127.0.0.1:8000
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
 
-### 3️⃣ Frontend (Angular)
-    cd ../frontend
-    npm install
-    ng serve
+Configure database credentials and Python service connectivity as required by the application. This README does not claim the complete stack has been executed or tested.
 
-Frontend will run at: http://localhost:4200
+## Engineering topics for interviews
 
-### 4️⃣ Python AI Microservice
-    pip install -r requirements.txt
-    python app.py
+Service boundaries, API orchestration, explainability of scoring, asynchronous media processing, audit logging, human-in-the-loop decision making, and operational safeguards for sensitive data.
 
-Microservice will run at: http://127.0.0.1:5000
+## Status
+
+Academic prototype. Do not use for consequential employment decisions without substantial validation and legal/privacy review.
