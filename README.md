@@ -1,60 +1,61 @@
-# HR AI Agent — End-to-End HR Workflow Automation
+# HR AI Agent — Workflow integration prototype
 
-An MSc AI engineering project exploring automation across candidate screening, interviews, hiring decisions, onboarding, and leave management.
+An MSc Artificial Intelligence project exploring HR workflow orchestration across a Laravel backend and a Python/Flask service. The repository demonstrates service integration and text-similarity matching, with explicit academic prototype limits.
 
-## Engineering scope
+## Start here
 
-- **Frontend:** Angular
-- **Backend:** Laravel
-- **AI service:** Python
-- **Database:** MySQL
-- **Integration:** Laravel APIs connect workflow operations with a separate Python analysis service.
+| Review question | Source |
+| --- | --- |
+| How are application workflows exposed? | [Laravel API routes](backend/routes/api.php) |
+| How are Python endpoints organised? | [Flask service](python-api/app.py) |
+| How are PDF/DOCX files matched to a job description? | [TF-IDF and cosine similarity](python-api/utils/resume_parser.py) |
+| What does interview analysis currently implement? | [Interview utilities](python-api/utils/interview_analyzer.py) |
+| How are onboarding and leave responses generated? | [Python utilities](python-api/utils) |
 
-## Workflow
+## Components
 
-1. An administrator creates a job opening.
-2. A candidate submits a resume.
-3. The system scores resume/job-description similarity.
-4. The candidate receives an interview invitation and records a video.
-5. The interview is submitted for analysis.
-6. The system combines assessment signals for a hiring recommendation.
-7. Onboarding tasks and leave-related workflows follow.
+- `backend/`: Laravel account, job, resume, interview, onboarding, leave and meeting routes.
+- `python-api/`: Flask endpoints and matching/workflow utilities.
+- `frontend`: a Git submodule/gitlink entry, not ordinary checked-in Angular source. This checkout has no root `.gitmodules` file, so a normal clone does not provide a reproducible frontend checkout.
 
-## AI approach and limitations
+## Python endpoint map
 
-Resume matching uses TF-IDF and cosine similarity. Some interview-analysis and speech-processing functionality was implemented as placeholders during the academic project; the repository should **not** be represented as a validated, fully automated hiring decision system. Any real deployment would require robust model evaluation, fairness testing, human review, privacy controls, and explicit consent for processing candidate recordings.
+| Method | Path |
+| --- | --- |
+| POST | `/api/resume-score` |
+| POST | `/api/interview-invite` |
+| POST | `/api/analyze-interview` |
+| POST | `/api/hiring-decision` |
+| POST | `/api/onboarding` |
+| POST | `/api/leave-predict` |
+| GET | `/api/logs` |
 
-## Architecture
-
-```mermaid
-flowchart LR
-  A[Angular candidate/admin UI] --> B[Laravel API and workflow]
-  B --> C[(MySQL)]
-  B --> D[Python analysis service]
-  D --> B
-```
+The resume endpoint accepts a `resume` file and `job_description` form field. It extracts PDF/DOCX text and calculates TF-IDF cosine similarity. A similarity score is not a validated measure of candidate suitability.
 
 ## Local development
 
-The repository contains a `backend` directory and a `frontend` entry. Verify the frontend checkout and its own instructions before attempting a full-stack run.
+For the backend, install its locked Composer dependencies, configure a local `.env` and disposable database, and run migrations before serving it. Configure the Python service URL in the backend integration code.
 
-For a conventional Laravel backend setup:
+For the Python service, use an isolated environment with versions compatible with the packages in [requirements.txt](python-api/requirements.txt):
 
 ```bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve
+cd python-api
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python app.py
 ```
 
-Configure database credentials and Python service connectivity as required by the application. This README does not claim the complete stack has been executed or tested.
+The script starts a development server on port 5000. Requirements are not version-pinned; reproducibility needs further work. Do not expose the development server or logs publicly.
 
-## Engineering topics for interviews
+## Scope and next engineering work
 
-Service boundaries, API orchestration, explainability of scoring, asynchronous media processing, audit logging, human-in-the-loop decision making, and operational safeguards for sensitive data.
+Interview/speech-analysis functionality includes placeholders. The complete stack was not executed during this documentation review, and the frontend checkout needs repair before a reproducible full demo.
 
-## Status
+Useful next work: dependency pinning, API-contract tests, robust file validation, a reproducible frontend checkout and evaluation of matching behaviour using synthetic inputs. Human review, privacy controls and substantive validation would be prerequisites for any real HR deployment.
 
-Academic prototype. Do not use for consequential employment decisions without substantial validation and legal/privacy review.
+This project is an academic integration prototype, not a validated automated hiring system.
+
+## Author
+
+[Waleed Mazhar — Senior Software Engineer](https://github.com/waleedmazhar64)
